@@ -5,3 +5,7 @@ upload/
 .DS_Store
 .env
 .idea
+
+# myIgnore
+
+model.txt
