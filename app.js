@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const handlebars = require('express-handlebars') // 引入 express-handlebars
 const flash = require('connect-flash')
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
   res.locals.user = getUser(req)
   next()
 })
+app.use('/upload', express.static(path.join(__dirname, 'upload')))
 app.use(routes)
 
 app.listen(port, () => {
