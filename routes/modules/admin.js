@@ -2,6 +2,12 @@ const express = require('express')
 const router = express.Router()
 const adminController = require('../../controllers/admin-controller')
 const upload = require('../../middleware/multer')
+
+// users
+router.patch('/users/:id', adminController.patchUser)
+router.get('/users', adminController.getUsers)
+
+// restaurants
 router.get('/restaurants/create', adminController.createRestaurant)
 router.get('/restaurants/:id/edit', adminController.editRestaurant)
 router.get('/restaurants/:id', adminController.getRestaurant)
