@@ -100,7 +100,8 @@ const adminController = {
       .catch(err => next(err))
   },
   patchUser: (req, res, next) => {
-    User.findByPk(req.params.id)
+    const id = req.params.id
+    User.findByPk(id)
       .then(user => {
         if (!user) throw new Error("User didn't exist!")
         if (user.email === 'root@example.com') {
