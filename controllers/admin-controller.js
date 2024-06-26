@@ -89,12 +89,10 @@ const adminController = {
   },
   // users data
   getUsers: (req, res, next) => {
-    // return res.render('admin/users')
     return User.findAll({
       raw: true
     })
       .then(users => {
-        // console.log(users)
         res.render('admin/users', { users })
       })
       .catch(err => next(err))
@@ -108,7 +106,7 @@ const adminController = {
         return res.redirect('back')
       }
       user.update({
-        isAdmin: !user.isAdmin
+        isAdmin: !user.dataValues.isAdmin
       })
       req.flash('success_messages', '使用者權限變更成功')
       return res.redirect('/admin/users')
