@@ -18,6 +18,12 @@
     value="{{restaurant.openingHours}}">
 </div>
 <div class="form-row mb-3">
+  <lable class="form-lable" for="catagoryId">Category</lable>
+  <select name="categoryId" id="categoryId" class="form-controle">
+    {{#each catagories}}
+    <option value="{{this.id}}">{{this.name}}</option>
+    {{/each}}
+  </select>
   <label class="form-label" for="description">Description</label>
   <textarea class="form-control" id="description" name="description" rows="3">{{restaurant.description}}</textarea>
 </div>
