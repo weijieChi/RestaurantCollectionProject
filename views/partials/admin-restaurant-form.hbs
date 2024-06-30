@@ -20,7 +20,11 @@
 <div class="form-row mb-3">
   <lable class="form-lable" for="catagoryId">Category</lable>
   <select name="categoryId" id="categoryId" class="form-controle">
-    {{#each catagories}}
+    {{#each categories}}
+    {{!-- 教範的自訂 helper 寫法，改寫自原生 if else --}}
+    <option value="{{this.id}}" {{#ifCond this.id ../restaurant.categoryId}} selected {{/ifCond}}>{{this.name}}</option>
+    {{!-- 另一種 自訂 helper 寫法 --}}
+    {{!-- <option value="{{this.id}}" {{#if (isEqual this.id ../restaurant.categoryId)}} selected {{/if}}>{{this.name}}</option> --}}
     <option value="{{this.id}}">{{this.name}}</option>
     {{/each}}
   </select>
