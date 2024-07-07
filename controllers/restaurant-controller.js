@@ -1,18 +1,22 @@
 const { Restaurant, Category } = require('../models')
 const restaurantController = {
   getRestaurants: (req, res, next) => {
-    return Restaurant.findAll({
-      include: Category,
-      nest: true,
-      raw: true
-    })
-      .then(restaurants => {
+    return Promise.all([
+      Restaurant.findAll({
+        include: Category,
+        nest: true,
+        raw: true
+      }),
+      Category.findAll({ raw: true })
+    ])
+      .then(([restaurants, categories]) => {
         const data = restaurants.map(r => ({
           ...r,
           description: r.description.substring(0, 50)
         }))
         return res.render('restaurants', {
-          restaurants: data
+          restaurants: data,
+          categories
         })
       })
       .catch(err => next(err))
