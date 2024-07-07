@@ -1,9 +1,13 @@
 const { Restaurant, Category } = require('../models')
 const restaurantController = {
   getRestaurants: (req, res, next) => {
+    const categoryId = Number(req.query.categoryId, 10) || ''
     return Promise.all([
       Restaurant.findAll({
         include: Category,
+        where: {
+          ...categoryId ? { categoryId } : {}
+        },
         nest: true,
         raw: true
       }),
@@ -16,7 +20,8 @@ const restaurantController = {
         }))
         return res.render('restaurants', {
           restaurants: data,
-          categories
+          categories,
+          categoryId
         })
       })
       .catch(err => next(err))
