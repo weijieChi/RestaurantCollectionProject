@@ -37,14 +37,29 @@ const restaurantController = {
   getRestaurant: (req, res, next) => {
     return Restaurant.findByPk(req.params.id, {
       include: Category,
-      nest: true,
-      raw: true
+      nest: true
     })
       .then(restaurant => {
         if (!restaurant) throw new Error("Restaurant didn't exost!")
-        res.render('restaurant', { restaurant })
+        console.log(restaurant)
+        return restaurant.increment('viewCount')
+      })
+      .then(restaurant => {
+        res.render('restaurant', { restaurant: restaurant.dataValues })
       })
       .catch(err => next(err))
+  },
+  getDashboard: async (req, res, next) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        include: Category,
+        nest: true,
+        raw: true
+      })
+      return res.render('dashboard', { restaurant })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 module.exports = restaurantController
