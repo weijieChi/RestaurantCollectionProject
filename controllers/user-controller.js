@@ -39,6 +39,37 @@ const userController = {
     req.flash('success_nessages', '登出成功！')
     req.logout()
     res.redirect('/signin')
+  },
+  getUser: async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.params.id, { raw: true }) // req.params.id
+      // console.log(user)
+      res.render('users/profile', { user })
+    } catch (error) {
+      next(error)
+    }
+  },
+  editUser: async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.params.id, { raw: true })
+      if (!user) throw new Error("User Profile did'n exists!")
+      res.render('users/edit', { user })
+    } catch (error) {
+      next(error)
+    }
+  },
+  putUser: async (req, res, next) => {
+    try {
+      const id = req.params.id
+      if (Number(id, 10) !== req.user.id) throw new Error('登入帳號非該使用者資料帳號')
+      const user = await User.findByPk(req.params.id)
+      const { name } = req.body
+      await user.update({ name })
+      req.flash('success_messages', '使用者資料編輯成功')
+      res.redirect(`/users/${id}`)
+    } catch (error) {
+      next(error)
+    }
   }
 }
 module.exports = userController
