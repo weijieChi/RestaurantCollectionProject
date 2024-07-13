@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
-const db = require('../models')
-const { User } = db
+const { User, Comment, Restaurant } = require('../models')
+const sequelize = require('sequelize')
 const userController = {
   signUpPage: (req, res) => {
     res.render('signup')
@@ -42,9 +42,23 @@ const userController = {
   },
   getUser: async (req, res, next) => {
     try {
-      const user = await User.findByPk(req.params.id, { raw: true }) // req.params.id
-      // console.log(user)
-      res.render('users/profile', { user })
+      const userId = Number(req.params.id, 10)
+      if (userId !== req.user.id) {
+        req.flash('error_messages', '登入帳號非該使用者帳號！')
+        return res.redirect('/restaurants')
+      }
+      const user = await User.findByPk(userId, { raw: true })
+      const userCommentRestaurants = await Comment.findAll({
+        attributes: [sequelize.fn('DISTINCT', sequelize.col('restaurant_id'))], // 使用 restaurantId 作為外鍵，並設定不重複
+        include: {
+          model: Restaurant,
+          attributes: ['image', 'name'] // 需要的欄位
+        },
+        where: { userId },
+        raw: true,
+        nest: true
+      })
+      res.render('users/profile', { user, userCommentRestaurants })
     } catch (error) {
       next(error)
     }
