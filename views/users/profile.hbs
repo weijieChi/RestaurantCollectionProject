@@ -1,0 +1,31 @@
+<div class="row mb-5">
+  <div class="col-md-12">
+    <h1>{{user.name}}</h1>
+    <p>{{user.email}}</p>
+    <p>{{userCommentRestaurants.length}} 已評論餐廳</p>
+    <a class="btn btn-primary" href="/users/{{user.id}}/edit">Edit</a>
+  </div>
+</div>
+<div class="pt-5">
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid ">
+    <p>{{userCommentRestaurants.length}} 已評論餐廳</p>
+  </div>
+</nav>
+<div class="row mb-5">
+  {{#each userCommentRestaurants}}
+  <div class="card" style="width: 18rem;">
+    <a href="/restaurants/{{this.restaurant_id}}">
+    <img src="{{this.Restaurant.image}}." class="card-img-top" alt="...">
+    </a>
+    <div class="card-body">
+      <p class="card-text">
+        {{this.Restaurant.name}}
+      </p>
+      </p>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+</div>

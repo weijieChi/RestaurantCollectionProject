@@ -30,7 +30,7 @@
           </form>
           {{!-- set as user --}}
           {{else}}
-          <form action="/admin/users/{{this.id}}?_method=PATCH" method="post">
+          <form action="/admin/users/{{this.id}}?_method=PATCH" method="post" style="display: inline">
             <input type="hidden" name="isAdmin" value="">
             <button type="submit">set ad admin</button>
           </form>
