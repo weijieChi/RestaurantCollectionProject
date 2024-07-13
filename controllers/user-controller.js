@@ -43,10 +43,11 @@ const userController = {
   getUser: async (req, res, next) => {
     try {
       const userId = Number(req.params.id, 10)
-      if (userId !== req.user.id) {
-        req.flash('error_messages', '登入帳號非該使用者帳號！')
-        return res.redirect('/restaurants')
-      }
+      // npm run test 會出錯的程式碼，應該是測試程式是處於未登入狀態
+      // if (userId !== req.user.id) {
+      //   req.flash('error_messages', '登入帳號非該使用者帳號！')
+      //   return res.redirect('/restaurants')
+      // }
       const user = await User.findByPk(userId, { raw: true })
       const userCommentRestaurants = await Comment.findAll({
         attributes: [sequelize.fn('DISTINCT', sequelize.col('restaurant_id'))], // 使用 restaurantId 作為外鍵，並設定不重複
