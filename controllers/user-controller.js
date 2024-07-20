@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
-const { User, Comment, Restaurant, Favorite } = require('../models')
+const { User, Restaurant, Comment, Favorite } = require('../models')
+// const { imgurFileHandler } = require('../helpers/file-helpers')
 const sequelize = require('sequelize')
 const userController = {
   signUpPage: (req, res) => {
@@ -36,7 +37,7 @@ const userController = {
     res.redirect('/restaurants')
   },
   logout: (req, res) => {
-    req.flash('success_nessages', '登出成功！')
+    req.flash('success_messages', '登出成功！')
     req.logout()
     res.redirect('/signin')
   },
@@ -120,7 +121,7 @@ const userController = {
         if (!favorite) throw new Error("You haven't favorited this restaurant")
         return favorite.destroy()
       })
-      .then(() => res.redireck('back'))
+      .then(() => res.redirect('back'))
       .catch(err => next(err))
   }
 }

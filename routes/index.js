@@ -21,7 +21,7 @@ router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, userController.putUser)
 // restaurants
 router.get('/restaurants/feeds', authenticated, restController.getFeeds)
-router.get('/restaurant/:id/dashboard', authenticated, restController.getDashboard)
+router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
 router.get('/restaurants', authenticated, restController.getRestaurants)
 
@@ -30,8 +30,8 @@ router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComme
 router.post('/comments', authenticated, commentController.postComment)
 
 // favorite
-router.post('/favorite/:restaurantId', authenticated, userController.addFavorited)
-router.delete('/favorite/:restarurasntId', authenticated, userController.removeFavorite)
+router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+router.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
 
 router.use('/', (req, res) => res.redirect('/restaurants'))
 router.use('/', generalErrorHandler)

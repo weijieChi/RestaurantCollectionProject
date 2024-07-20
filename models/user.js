@@ -10,24 +10,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      // define association here
       User.hasMany(models.Comment, { foreignKey: 'userId' })
-      User.hasMany(models.Restaurant, {
-        thoutht: models.Favorite,
+      User.belongsToMany(models.Restaurant, {
+        through: models.Favorite,
         foreignKey: 'userId',
         as: 'FavoritedRestaurants'
       })
     }
-  };
+  }
   User.init({
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     isAdmin: DataTypes.BOOLEAN
+    // image: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',
-    tableName: 'Users', // 新增這裡
+    tableName: 'Users',
     underscored: true
   })
   return User
