@@ -31,6 +31,7 @@ passport.serializeUser((user, cb) => {
   cb(null, user.id)
 })
 passport.deserializeUser((id, cb) => {
+  console.log('\x1b[33m%s\x1b[0m', 'deserializeUser message')
   return User.findByPk(id, {
     include: [
       { model: Restaurant, as: 'FavoritedRestaurants' }
