@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     followingId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Followships',
+    modelName: 'Followship',
+    tableName: 'Followships',
     underscored: true
   })
   return Followship
