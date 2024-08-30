@@ -1,4 +1,4 @@
-const { Restaurant, Category, Comment, User } = require('../models')
+const { Restaurant, Category, Comment, User, Favorite } = require('../models')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const restaurantController = {
   getRestaurants: (req, res, next) => {
@@ -69,7 +69,13 @@ const restaurantController = {
         nest: true,
         raw: true
       })
-      return res.render('dashboard', { restaurant })
+      const restaurantCommentCount = await await Comment.count({
+        where: { restaurantId: req.params.id }
+      })
+      const restaurantFavoriteCount = await Favorite.count({
+        where: { restaurantId: req.params.id }
+      })
+      return res.render('dashboard', { restaurant, restaurantCommentCount, restaurantFavoriteCount })
     } catch (error) {
       next(error)
     }
