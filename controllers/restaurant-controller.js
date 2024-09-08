@@ -104,6 +104,26 @@ const restaurantController = {
         })
       })
       .catch(err => next(err))
+  },
+  getTopRestaurants: async (req, res, next) => {
+    try {
+      const allRestaurants = await Restaurant.findAll({
+        include: [{
+          model: User, as: 'FavoritedUsers'
+        }]
+      })
+      const addFavotiredCountRestaurants = allRestaurants.map(r => ({
+        ...r.dataValues,
+        description: r.dataValues.description.substring(0, 50),
+        favoritedCount: r.FavoritedUsers.length,
+        isFavorited: req.user && req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+      }))
+      const sortRestaurants = addFavotiredCountRestaurants.sort((a, b) => b.favoritedCount - a.favoritedCount)
+      const restaurants = sortRestaurants.slice(0, 10) // 因為採用非同步寫法，所以特別修改城府符合測試程式規範的變數命名方式
+      res.render('top-restaurants', { restaurants })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 module.exports = restaurantController
