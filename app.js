@@ -4,7 +4,7 @@ const handlebars = require('express-handlebars') // 引入 express-handlebars
 const flash = require('connect-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
-const routes = require('./routes')
+const { pages } = require('./routes')
 const passport = require('./config/passport')
 const { getUser } = require('./helpers/auth-helpers')
 const handlerbarsHelpers = require('./helpers/handlerbars-helpers')
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
   next()
 })
 app.use('/upload', express.static(path.join(__dirname, 'upload')))
-app.use(routes)
+app.use(pages)
 
 app.listen(port, () => {
   console.info(`Example app listening on port ${port}!`)

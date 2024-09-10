@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, Restaurant, Comment, Favorite, Like, Followship } = require('../models')
+const { User, Restaurant, Comment, Favorite, Like, Followship } = require('../../models')
 // const { imgurFileHandler } = require('../helpers/file-helpers')
 const sequelize = require('sequelize')
 const userController = {
