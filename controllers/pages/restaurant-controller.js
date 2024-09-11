@@ -1,42 +1,8 @@
 const { Restaurant, Category, Comment, User, Favorite } = require('../../models')
-const { getOffset, getPagination } = require('../../helpers/pagination-helper')
+const restaurantServices = require('../../services/restaurant-services') // 引入 restaurant-services
 const restaurantController = {
   getRestaurants: (req, res, next) => {
-    const DEFAULT_LIMIT = 9
-    const categoryId = Number(req.query.categoryId, 10) || ''
-    const page = Number(req.query.page, 10) || 1
-    const limit = Number(req.query.limit, 10) || DEFAULT_LIMIT
-    const offset = getOffset(limit, page)
-    return Promise.all([
-      Restaurant.findAndCountAll({
-        include: Category,
-        where: {
-          ...categoryId ? { categoryId } : {}
-        },
-        limit,
-        offset,
-        nest: true,
-        raw: true
-      }),
-      Category.findAll({ raw: true })
-    ])
-      .then(([restaurants, categories]) => {
-        const favoritedRestaurantsId = req.user && req.user.FavoritedRestaurants.map(fr => fr.id)
-        const likeRestaurantsId = req.user && req.user.LikedRestaurants.map(lr => lr.id)
-        const data = restaurants.rows.map(r => ({
-          ...r,
-          description: r.description.substring(0, 50),
-          isFavorited: favoritedRestaurantsId.includes(r.id),
-          isLiked: likeRestaurantsId.includes(r.id)
-        }))
-        return res.render('restaurants', {
-          restaurants: data,
-          categories,
-          categoryId,
-          pagination: getPagination(limit, page, restaurants.count)
-        })
-      })
-      .catch(err => next(err))
+    restaurantServices.getRestaurants(req, (err, data) => err ? next(err) : res.render('restaurants', data))
   },
   getRestaurant: (req, res, next) => {
     return Restaurant.findByPk(req.params.id, {
@@ -112,13 +78,13 @@ const restaurantController = {
           model: User, as: 'FavoritedUsers'
         }]
       })
-      const addFavotiredCountRestaurants = allRestaurants.map(r => ({
+      const addFavoritedCountRestaurants = allRestaurants.map(r => ({
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
         favoritedCount: r.FavoritedUsers.length,
         isFavorited: req.user && req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
       }))
-      const sortRestaurants = addFavotiredCountRestaurants.sort((a, b) => b.favoritedCount - a.favoritedCount)
+      const sortRestaurants = addFavoritedCountRestaurants.sort((a, b) => b.favoritedCount - a.favoritedCount)
       const restaurants = sortRestaurants.slice(0, 10) // 因為採用非同步寫法，所以特別修改城府符合測試程式規範的變數命名方式
       res.render('top-restaurants', { restaurants })
     } catch (error) {
