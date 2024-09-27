@@ -11,5 +11,4 @@ const localFileHandler = file => {
 }
 module.exports = {
   localFileHandler
-
 }

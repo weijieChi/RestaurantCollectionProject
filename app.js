@@ -7,7 +7,7 @@ const methodOverride = require('method-override')
 const { pages, apis } = require('./routes')
 const passport = require('./config/passport')
 const { getUser } = require('./helpers/auth-helpers')
-const handlerbarsHelpers = require('./helpers/handlerbars-helpers')
+const handlebarsHelpers = require('./helpers/handlebars')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -16,11 +16,12 @@ const SESSION_SECRET = 'secret'
 // 註冊 Handlebars 樣板引擎，並指定副檔名為 .hbs
 app.engine('hbs', handlebars({
   extname: '.hbs',
-  helpers: handlerbarsHelpers
+  helpers: handlebarsHelpers
 }))
 // 設定使用 Handlebars 做為樣板引擎
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
 app.use(passport.session())
