@@ -37,9 +37,14 @@ const userController = {
     res.redirect('/restaurants')
   },
   logout: (req, res) => {
-    req.flash('success_messages', '登出成功！')
-    req.logout()
-    res.redirect('/signin')
+    req.logout(function (err) {
+      if (err) {
+        req.flash('error_messages', err)
+        res.redirect('/')
+      }
+      req.flash('success_messages', '登出成功！')
+      res.redirect('/signin')
+    })
   },
   getUser: async (req, res, next) => {
     try {
