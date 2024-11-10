@@ -1,4 +1,4 @@
-const { Restaurant, Category } = require('../models')
+const { Restaurant, Category, User, Comment, Favorite } = require('../models')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const restaurantServices = {
   getRestaurants: (req, cb) => {
@@ -37,6 +37,62 @@ const restaurantServices = {
         })
       })
       .catch(err => cb(err))
+  },
+  getRestaurant: async (req, cb) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        include: [
+          Category,
+          { model: Comment, include: User },
+          { model: User, as: 'FavoritedUsers' },
+          { model: User, as: 'LikesUsers' }
+        ]
+      })
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      return cb(null, restaurant.toJSON()
+      )
+    } catch (err) {
+      return cb(err)
+    }
+  },
+  getDashboard: async (req, cb) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        include: Category,
+        nest: true,
+        raw: true
+      })
+      const commentCount = await Comment.count({
+        where: { restaurantId: req.params.id }
+      })
+      const favoriteCount = await Favorite.count({
+        where: { restaurantId: req.params.id }
+      })
+      return cb(null, { restaurant, commentCount, favoriteCount })
+    } catch (err) {
+      cb(err)
+    }
+  },
+  getFeeds: async (req, cb) => {
+    try {
+      const Restaurants = await Restaurant.findAll({
+        limit: 10,
+        order: [['createdAt', 'DESC']],
+        include: [Category],
+        raw: true,
+        nest: true
+      })
+      const Comments = Comment.findAll({
+        limit: 10,
+        order: [['createdAt', 'DESC']],
+        include: [User, Restaurant],
+        raw: true,
+        nest: true
+      })
+      return cb(null, { Restaurants, Comments })
+    } catch (err) {
+      cb(err)
+    }
   }
 }
 module.exports = restaurantServices

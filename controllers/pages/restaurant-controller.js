@@ -35,7 +35,7 @@ const restaurantController = {
         nest: true,
         raw: true
       })
-      const restaurantCommentCount = await await Comment.count({
+      const restaurantCommentCount = await Comment.count({
         where: { restaurantId: req.params.id }
       })
       const restaurantFavoriteCount = await Favorite.count({
