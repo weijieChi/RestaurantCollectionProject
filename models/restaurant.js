@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'restaurantId',
         as: 'LikesUsers'
       })
+      Restaurant.hasMany(models.Favorite, { foreignKey: 'restaurantId' }) // 新增用預計算蒐藏數
     }
   }
   Restaurant.init({

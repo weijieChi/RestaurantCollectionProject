@@ -40,16 +40,19 @@ const restaurantServices = {
   },
   getRestaurant: async (req, cb) => {
     try {
-      const restaurant = await Restaurant.findByPk(req.params.id, {
-        include: [
-          Category,
-          { model: Comment, include: User },
-          { model: User, as: 'FavoritedUsers' },
-          { model: User, as: 'LikesUsers' }
-        ]
-      })
+      const restaurant = {
+        restaurant: await Restaurant.findByPk(req.params.id, {
+          include: [
+            Category,
+            { model: Comment, include: User },
+            { model: User, as: 'FavoritedUsers' },
+            { model: User, as: 'LikesUsers' }
+          ],
+          raw: true
+        })
+      }
       if (!restaurant) throw new Error("Restaurant didn't exist!")
-      return cb(null, restaurant.toJSON()
+      return cb(null, restaurant
       )
     } catch (err) {
       return cb(err)
@@ -75,21 +78,41 @@ const restaurantServices = {
   },
   getFeeds: async (req, cb) => {
     try {
-      const Restaurants = await Restaurant.findAll({
+      const top10Restaurants = await Restaurant.findAll({
         limit: 10,
         order: [['createdAt', 'DESC']],
         include: [Category],
         raw: true,
         nest: true
       })
-      const Comments = Comment.findAll({
+      const top10Comments = await Comment.findAll({
         limit: 10,
         order: [['createdAt', 'DESC']],
         include: [User, Restaurant],
         raw: true,
         nest: true
       })
-      return cb(null, { Restaurants, Comments })
+      return cb(null, { top10Restaurants, top10Comments })
+    } catch (err) {
+      cb(err)
+    }
+  },
+  getTopRestaurants: async (req, cb) => {
+    try {
+      const allRestaurants = await Restaurant.findAll({
+        include: [{
+          model: User, as: 'FavoritedUsers'
+        }]
+      })
+      const addFavoritedCountRestaurants = allRestaurants.map(r => ({
+        ...r.dataValues,
+        description: r.dataValues.description.substring(0, 50),
+        favoritedCount: r.FavoritedUsers.length,
+        isFavorited: req.user && req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
+      }))
+      const sortRestaurants = addFavoritedCountRestaurants.sort((a, b) => b.favoritedCount - a.favoritedCount)
+      const restaurants = sortRestaurants.slice(0, 10) // 因為採用非同步寫法，所以特別修改城府符合測試程式規範的變數命名方式
+      cb(null, { restaurants })
     } catch (err) {
       cb(err)
     }
