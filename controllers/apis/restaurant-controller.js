@@ -22,6 +22,9 @@ const restaurantController = {
   },
   putRestaurant: (req, res, next) => {
     restaurantServices.putRestaurant(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  deleteRestaurant: (req, res, next) => {
+    restaurantServices.deleteRestaurant(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 

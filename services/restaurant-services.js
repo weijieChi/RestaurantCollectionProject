@@ -101,6 +101,20 @@ const restaurantServices = {
       cb(err)
     }
   },
+  deleteRestaurant: async (req, cb) => {
+    try {
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      if (!restaurant) {
+        const err = new Error("Restaurant didn't exist!")
+        err.status = 404
+        throw err
+      }
+      const deleteRestaurant = await restaurant.destroy()
+      cb(null, { deleteRestaurant })
+    } catch (err) {
+      cb(err)
+    }
+  },
   getDashboard: async (req, cb) => {
     try {
       const restaurant = await Restaurant.findByPk(req.params.id, {

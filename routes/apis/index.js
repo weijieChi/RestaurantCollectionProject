@@ -19,6 +19,7 @@ router.get('/restaurants/:id', authenticated, restController.getRestaurant)
 router.get('/restaurants', authenticated, restController.getRestaurants)
 router.post('/restaurants', upload.single('image'), restController.postRestaurants)
 router.put('/restaurants/:id', authenticated, restController.putRestaurant)
+router.delete('/restaurants/:id', authenticated, restController.deleteRestaurant)
 
 // user sign-in sing-up
 router.post('/sign-in', passport.authenticate('local', { session: false }), userController.signIn)
