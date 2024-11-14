@@ -6,6 +6,7 @@ const restController = require('../../controllers/apis/restaurant-controller')
 const userController = require('../../controllers/apis/user-controller')
 const { authenticated, authenticatedAdmin } = require('../../middleware/api-auth')
 const { apiErrorHandler } = require('../../middleware/error-handler')
+const upload = require('../../middleware/multer')
 
 // admin
 router.use('/admin', authenticated, authenticatedAdmin, admin)
@@ -16,6 +17,7 @@ router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
 router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
 router.get('/restaurants', authenticated, restController.getRestaurants)
+router.post('/restaurants', upload.single('image'), restController.postRestaurant)
 
 // user sign-in sing-up
 router.post('/signin', passport.authenticate('local', { session: false }), userController.signIn)

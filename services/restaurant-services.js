@@ -1,5 +1,6 @@
 const { Restaurant, Category, User, Comment, Favorite, sequelize } = require('../models')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const { localFileHandler } = require('../helpers/file-helpers')
 const restaurantServices = {
   getRestaurants: (req, cb) => {
     const DEFAULT_LIMIT = 9
@@ -56,6 +57,26 @@ const restaurantServices = {
       )
     } catch (err) {
       return cb(err)
+    }
+  },
+  postRestaurants: async (req, cb) => {
+    try {
+      const { name, tel, address, openingHours, description, categoryId } = req.body
+      if (!name) throw new Error('Restaurant name is required!')
+      const { file } = req
+      const filePath = await localFileHandler(file)
+      const newRestaurant = await Restaurant.create({
+        name,
+        tel,
+        address,
+        openingHours,
+        description,
+        image: filePath || null,
+        categoryId
+      })
+      cb(null, { restaurant: newRestaurant })
+    } catch (err) {
+      cb(err)
     }
   },
   getDashboard: async (req, cb) => {
