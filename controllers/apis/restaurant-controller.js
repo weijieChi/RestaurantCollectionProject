@@ -17,8 +17,11 @@ const restaurantController = {
   getTopRestaurants: (req, res, next) => {
     restaurantServices.getTopRestaurants(req, (err, data) => err ? next(err) : res.json(data))
   },
-  postRestaurant: (req, res, next) => {
+  postRestaurants: (req, res, next) => {
     restaurantServices.postRestaurants(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  putRestaurant: (req, res, next) => {
+    restaurantServices.putRestaurant(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 

@@ -59,7 +59,7 @@ const restaurantServices = {
       return cb(err)
     }
   },
-  postRestaurants: async (req, cb) => {
+  postRestaurant: async (req, cb) => {
     try {
       const { name, tel, address, openingHours, description, categoryId } = req.body
       if (!name) throw new Error('Restaurant name is required!')
@@ -75,6 +75,28 @@ const restaurantServices = {
         categoryId
       })
       cb(null, { restaurant: newRestaurant })
+    } catch (err) {
+      cb(err)
+    }
+  },
+  putRestaurant: async (req, cb) => {
+    try {
+      const { name, tel, address, openingHours, description, categoryId } = req.body
+      if (!name) throw new Error('Restaurant name is required!')
+      const restaurant = await Restaurant.findByPk(req.params.id)
+      if (!restaurant) throw new Error("Restaurant didn't exist!")
+      const { file } = req
+      const filePath = await localFileHandler(file)
+      const putRestaurant = await Restaurant.create({
+        name,
+        tel,
+        address,
+        openingHours,
+        description,
+        image: filePath || null,
+        categoryId
+      })
+      cb(null, { restaurant: putRestaurant })
     } catch (err) {
       cb(err)
     }

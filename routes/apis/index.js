@@ -17,11 +17,12 @@ router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
 router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
 router.get('/restaurants', authenticated, restController.getRestaurants)
-router.post('/restaurants', upload.single('image'), restController.postRestaurant)
+router.post('/restaurants', upload.single('image'), restController.postRestaurants)
+router.put('/restaurants/:id', authenticated, restController.putRestaurant)
 
 // user sign-in sing-up
-router.post('/signin', passport.authenticate('local', { session: false }), userController.signIn)
-router.post('/signup', userController.signUp)
+router.post('/sign-in', passport.authenticate('local', { session: false }), userController.signIn)
+router.post('/sign-up', userController.signUp)
 router.use('/', apiErrorHandler)
 
 module.exports = router
