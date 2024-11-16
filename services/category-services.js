@@ -1,5 +1,5 @@
 const { Category } = require('../models')
-const categoryController = {
+const categoryServices = {
   getCategories: async (req, cb) => {
     try {
       const catagories = await Category.findAll({
@@ -19,6 +19,21 @@ const categoryController = {
     } catch (err) {
       cb(err)
     }
+  },
+  postCategory: async (req, cb) => {
+    try {
+      const { name } = req.body
+      if (!name) throw new Error('Category name is required!')
+      const category = await Category.findAll({
+        where: { name },
+        raw: true
+      })
+      if (category.length) throw new Error('Category already exists!')
+      const newCategory = await Category.create({ name })
+      return cb(null, { newCategory })
+    } catch (err) {
+      cb(err)
+    }
   }
 }
-module.exports = categoryController
+module.exports = categoryServices

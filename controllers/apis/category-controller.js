@@ -5,6 +5,9 @@ const categoryController = {
   },
   getCategory: (req, res, next) => {
     categoryServices.getCategory(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  postCategory: (req, res, next) => {
+    categoryServices.postCategory(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 
