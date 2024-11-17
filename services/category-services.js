@@ -38,12 +38,21 @@ const categoryServices = {
   putCategory: async (req, cb) => {
     try {
       const { name } = req.body
-      const { id } = req.body
       if (!name) throw new Error('Category name is required!')
       const category = await Category.findByPk(req.params.id)
       if (!category) throw new Error("Category doesn't exist!")
-      const updateCategory = await category.update({ name }, { where: id })
+      const updateCategory = await category.update({ name })
       return cb(null, { updateCategory })
+    } catch (err) {
+      cb(err)
+    }
+  },
+  deleteCategory: async (req, cb) => {
+    try {
+      const category = await await Category.findByPk(req.params.id)
+      if (!category) throw new Error("Category doesn't exist!")
+      const deleteCategory = await category.destroy()
+      return cb(null, { deleteCategory })
     } catch (err) {
       cb(err)
     }
