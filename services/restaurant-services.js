@@ -109,8 +109,8 @@ const restaurantServices = {
         err.status = 404
         throw err
       }
-      const deleteRestaurant = await restaurant.destroy()
-      cb(null, { deleteRestaurant })
+      const deletedRestaurant = await restaurant.destroy()
+      cb(null, { deletedRestaurant })
     } catch (err) {
       cb(err)
     }

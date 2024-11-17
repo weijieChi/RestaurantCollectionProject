@@ -19,6 +19,16 @@ const commentServices = {
     } catch (err) {
       cb(err)
     }
+  },
+  deleteComment: async (req, cb) => {
+    try {
+      const comment = await Comment.findByPk(req.params.id)
+      if (!comment) throw new Error("Comment didn't exist!")
+      const deletedComment = await comment.destroy()
+      return cb(null, { deletedComment })
+    } catch (err) {
+      cb(err)
+    }
   }
 }
 

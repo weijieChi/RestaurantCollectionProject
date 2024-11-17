@@ -25,6 +25,7 @@ router.delete('/restaurants/:id', authenticated, restController.deleteRestaurant
 
 // comment
 router.post('/comments', authenticated, commentController.postComment)
+router.delete('/comments/:id', authenticated, commentController.deleteComment)
 
 // user sign-in sing-up
 router.post('/sign-in', passport.authenticate('local', { session: false }), userController.signIn)

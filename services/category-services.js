@@ -51,8 +51,8 @@ const categoryServices = {
     try {
       const category = await await Category.findByPk(req.params.id)
       if (!category) throw new Error("Category doesn't exist!")
-      const deleteCategory = await category.destroy()
-      return cb(null, { deleteCategory })
+      const deletedCategory = await category.destroy()
+      return cb(null, { deletedCategory })
     } catch (err) {
       cb(err)
     }
