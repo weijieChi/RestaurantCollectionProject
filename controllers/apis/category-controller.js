@@ -8,7 +8,11 @@ const categoryController = {
   },
   postCategory: (req, res, next) => {
     categoryServices.postCategory(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  putCategory: (req, res, next) => {
+    categoryServices.putCategory(req, (err, data) => err ? next(err) : res.json(data))
   }
+
 }
 
 module.exports = categoryController

@@ -34,6 +34,19 @@ const categoryServices = {
     } catch (err) {
       cb(err)
     }
+  },
+  putCategory: async (req, cb) => {
+    try {
+      const { name } = req.body
+      const { id } = req.body
+      if (!name) throw new Error('Category name is required!')
+      const category = await Category.findByPk(req.params.id)
+      if (!category) throw new Error("Category doesn't exist!")
+      const updateCategory = await category.update({ name }, { where: id })
+      return cb(null, { updateCategory })
+    } catch (err) {
+      cb(err)
+    }
   }
 }
 module.exports = categoryServices
