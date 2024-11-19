@@ -2,7 +2,7 @@ const { Restaurant, Category, User, Comment, Favorite, sequelize } = require('..
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const { localFileHandler } = require('../helpers/file-helpers')
 const restaurantServices = {
-  getRestaurants: (req, cb) => {
+  getRestaurants: async (req, cb) => {
     const DEFAULT_LIMIT = 9
     const categoryId = Number(req.query.categoryId, 10) || ''
     const page = Number(req.query.page, 10) || 1
@@ -26,7 +26,7 @@ const restaurantServices = {
         const likedRestaurantsId = req.user?.LikedRestaurants ? req.user.LikedRestaurants.map(lr => lr.id) : []
         const data = restaurants.rows.map(r => ({
           ...r,
-          description: r.description.substring(0, 50),
+          description: r.description ? r.description.substring(0, 50) : '',
           isFavorited: favoritedRestaurantsId.includes(r.id),
           isLiked: likedRestaurantsId.includes(r.id)
         }))
@@ -41,20 +41,18 @@ const restaurantServices = {
   },
   getRestaurant: async (req, cb) => {
     try {
-      const restaurant = {
-        restaurant: await Restaurant.findByPk(req.params.id, {
-          include: [
-            Category,
-            { model: Comment, include: User },
-            { model: User, as: 'FavoritedUsers' },
-            { model: User, as: 'LikesUsers' }
-          ],
-          raw: true
-        })
-      }
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        include: [
+          Category,
+          { model: Comment, include: User },
+          { model: User, as: 'FavoritedUsers' },
+          { model: User, as: 'LikesUsers' }
+        ]
+      })
       if (!restaurant) throw new Error("Restaurant didn't exist!")
-      return cb(null, restaurant
-      )
+      const isFavorited = restaurant.FavoritedUsers.some(f => f.id === req.user.id)
+      const isLiked = restaurant.LikesUsers.some(L => L.id === req.user.id)
+      return cb(null, { restaurant: restaurant.toJSON(), isFavorited: isFavorited, isLiked: isLiked })
     } catch (err) {
       return cb(err)
     }
