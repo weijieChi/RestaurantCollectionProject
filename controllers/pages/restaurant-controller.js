@@ -1,4 +1,4 @@
-const { Restaurant, Category, Comment, User } = require('../../models')
+const { Restaurant, User } = require('../../models')
 const restaurantServices = require('../../services/restaurant-services') // 引入 restaurant-services
 const restaurantController = {
   getRestaurants: (req, res, next) => {
@@ -12,29 +12,7 @@ const restaurantController = {
     restaurantServices.getDashboard(req, (err, data) => err ? next(err) : res.render('dashboard', data))
   },
   getFeeds: (req, res, next) => {
-    return Promise.all([
-      Restaurant.findAll({
-        limit: 10,
-        order: [['createdAt', 'DESC']],
-        include: [Category],
-        raw: true,
-        nest: true
-      }),
-      Comment.findAll({
-        limit: 10,
-        order: [['createdAt', 'DESC']],
-        include: [User, Restaurant],
-        raw: true,
-        nest: true
-      })
-    ])
-      .then(([restaurants, comments]) => {
-        res.render('feeds', {
-          restaurants,
-          comments
-        })
-      })
-      .catch(err => next(err))
+    restaurantServices.getFeeds(req, (err, data) => err ? next(err) : res.render('feeds', data))
   },
   getTopRestaurants: async (req, res, next) => {
     try {
@@ -45,7 +23,7 @@ const restaurantController = {
       })
       const addFavoritedCountRestaurants = allRestaurants.map(r => ({
         ...r.dataValues,
-        description: r.dataValues.description.substring(0, 50),
+        description: r.dataValues.description ? r.dataValues.description.substring(0, 50) : '',
         favoritedCount: r.FavoritedUsers.length,
         isFavorited: req.user && req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
       }))

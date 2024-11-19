@@ -52,6 +52,7 @@ const restaurantServices = {
       if (!restaurant) throw new Error("Restaurant didn't exist!")
       const isFavorited = restaurant.FavoritedUsers.some(f => f.id === req.user.id)
       const isLiked = restaurant.LikesUsers.some(L => L.id === req.user.id)
+      restaurant.increment('viewCount')
       return cb(null, { restaurant: restaurant.toJSON(), isFavorited: isFavorited, isLiked: isLiked })
     } catch (err) {
       return cb(err)
@@ -133,21 +134,21 @@ const restaurantServices = {
   },
   getFeeds: async (req, cb) => {
     try {
-      const top10Restaurants = await Restaurant.findAll({
+      const restaurants = await Restaurant.findAll({
         limit: 10,
         order: [['createdAt', 'DESC']],
         include: [Category],
         raw: true,
         nest: true
       })
-      const top10Comments = await Comment.findAll({
+      const comments = await Comment.findAll({
         limit: 10,
         order: [['createdAt', 'DESC']],
         include: [User, Restaurant],
         raw: true,
         nest: true
       })
-      return cb(null, { top10Restaurants, top10Comments })
+      return cb(null, { restaurants, comments })
     } catch (err) {
       cb(err)
     }
