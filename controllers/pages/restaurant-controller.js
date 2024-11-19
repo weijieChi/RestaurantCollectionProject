@@ -1,4 +1,4 @@
-const { Restaurant, Category, Comment, User, Favorite } = require('../../models')
+const { Restaurant, Category, Comment, User } = require('../../models')
 const restaurantServices = require('../../services/restaurant-services') // 引入 restaurant-services
 const restaurantController = {
   getRestaurants: (req, res, next) => {
@@ -8,23 +8,8 @@ const restaurantController = {
     restaurantServices.getRestaurant(req, (err, data) => err ? next(err) : res.render('restaurant', data)
     )
   },
-  getDashboard: async (req, res, next) => {
-    try {
-      const restaurant = await Restaurant.findByPk(req.params.id, {
-        include: Category,
-        nest: true,
-        raw: true
-      })
-      const restaurantCommentCount = await Comment.count({
-        where: { restaurantId: req.params.id }
-      })
-      const restaurantFavoriteCount = await Favorite.count({
-        where: { restaurantId: req.params.id }
-      })
-      return res.render('dashboard', { restaurant, restaurantCommentCount, restaurantFavoriteCount })
-    } catch (error) {
-      next(error)
-    }
+  getDashboard: (req, res, next) => {
+    restaurantServices.getDashboard(req, (err, data) => err ? next(err) : res.render('dashboard', data))
   },
   getFeeds: (req, res, next) => {
     return Promise.all([

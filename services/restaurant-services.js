@@ -120,13 +120,13 @@ const restaurantServices = {
         nest: true,
         raw: true
       })
-      const commentCount = await Comment.count({
+      const restaurantCommentCount = await Comment.count({
         where: { restaurantId: req.params.id }
       })
-      const favoriteCount = await Favorite.count({
+      const restaurantFavoriteCount = await Favorite.count({
         where: { restaurantId: req.params.id }
       })
-      return cb(null, { restaurant, commentCount, favoriteCount })
+      return cb(null, { restaurant, restaurantCommentCount, restaurantFavoriteCount })
     } catch (err) {
       cb(err)
     }
