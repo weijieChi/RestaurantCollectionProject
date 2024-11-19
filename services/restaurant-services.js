@@ -160,7 +160,7 @@ const restaurantServices = {
           include: [
             [
               sequelize.fn('COUNT', sequelize.col('Favorites.restaurant_id')),
-              'favoriteCount'
+              'favoritedCount'
             ]
           ]
         },
@@ -171,20 +171,13 @@ const restaurantServices = {
           }
         ],
         group: ['Restaurant.id'],
-        order: [[sequelize.col('favoriteCount'), 'DESC']],
+        order: [[sequelize.col('favoritedCount'), 'DESC']],
         limit: 10,
         raw: true,
         nest: true,
         subQuery: false
       })
-      const top10Restaurants = restaurants.map(r => (
-        {
-          ...r,
-          description: r.description.substring(0, 50),
-          isFavorited: req.user && req.user.FavoritedRestaurants.map(d => d.id).includes(r.id)
-        }
-      ))
-      cb(null, { top10Restaurants })
+      cb(null, { restaurants })
     } catch (err) {
       cb(err)
     }
