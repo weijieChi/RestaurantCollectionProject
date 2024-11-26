@@ -1,4 +1,7 @@
-require('dotenv').config()
+// 環境變數檢查
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config() // dotenv
+}
 
 const path = require('path')
 const express = require('express')
@@ -13,7 +16,7 @@ const handlebarsHelpers = require('./helpers/handlebars')
 
 const app = express()
 const port = process.env.PORT || 3000
-const SESSION_SECRET = 'secret'
+const SESSION_SECRET = process.env.SESSION_SECRET // 可以改為環境變數
 
 // 註冊 Handlebars 樣板引擎，並指定副檔名為 .hbs
 app.engine('hbs', handlebars({
