@@ -3,10 +3,11 @@ const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const { localFileHandler } = require('../helpers/file-helpers')
 const restaurantServices = {
   getRestaurants: async (req, cb) => {
-    const DEFAULT_LIMIT = 9
+    const DEFAULT_LIMIT = 6
     const categoryId = Number(req.query.categoryId, 10) || ''
     const page = Number(req.query.page, 10) || 1
-    const limit = Number(req.query.limit) || DEFAULT_LIMIT
+    let limit = Number(req.query.limit) || DEFAULT_LIMIT
+    if (limit > 30) { limit = 30 }
     const offset = getOffset(limit, page)
     Promise.all([
       Restaurant.findAndCountAll({

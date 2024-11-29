@@ -13,21 +13,6 @@ const authenticated = (req, res, next) => {
     next()
   })(req, res, next)
 }
-// 將以上寫法以更精確部省略的寫法會如下
-// const authenticated = (req, res, next) => {
-//   // passport 執行完畢後會回傳一個 function
-//   const middleware = passport.authenticate('jwt', { session: false }, (err, user) => {
-//     if (err || !user) {
-//       return res.status(401).json({
-//         status: 'error',
-//         message: 'unauthorized'
-//       })
-//     }
-//     req.user = user
-//     next()
-//   })
-//   middleware(req, res, next)
-// }
 
 const authenticatedAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin) return next()
