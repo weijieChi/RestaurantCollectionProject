@@ -126,8 +126,7 @@ SESSION_SECRET=forSessionSecretString
 npm run start
 ```
 11. 網頁在瀏覽器網址列輸入 `http://localhost:3000/` 就可以打開網頁了
-<!-- API 文件尚未撰寫，這邊暫時不用特別檢查 -->
-API 請參閱這份 [API 說明文件]()
+API 請參閱這份 [API 說明文件](./APIdocument.md)
 
 1. 最後要關閉伺服器就在 terminal 案 `ctrl` + `C` 再按 `y` + `enter` 關閉 nodejs 伺服器。
 
