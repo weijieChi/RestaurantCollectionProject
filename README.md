@@ -1,5 +1,8 @@
 # 餐廳收藏網站作品介紹
 餐廳收藏網站是一個支援使用者註冊、餐廳收藏及管理功能的專案，提供 SSR(server side rendering) 的前台與後台網頁的完整功能，並支援 RESTful API 供其他應用程式使用。
+
+![RestaurantCollectionProject](./markdown-images/RestaurantCollectionProject202411291607.png)
+
 # 主要功能如下：
 * 使用者功能
     * 使用者註冊
