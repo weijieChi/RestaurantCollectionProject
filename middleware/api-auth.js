@@ -9,7 +9,7 @@ const authenticated = (req, res, next) => {
         message: 'unauthorized'
       })
     }
-    req.user = user
+    req.user = user // 教案未將 user 資料放入 req.user 當中，導致 `routers/apis/index.js` 的 authenticatedAdmin 無法驗證使用者是否為 admin 身分
     next()
   })(req, res, next)
 }
